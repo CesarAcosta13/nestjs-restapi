@@ -12,7 +12,6 @@ import {
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import mongoose from 'mongoose';
 
 @Controller('books')
 export class BookController {
@@ -37,15 +36,11 @@ export class BookController {
     return this.bookService.create(book);
   }
 
-  @Put(':id([0-9a-fA-F]{24})')
+  @Put(':id')
   async updateBook(
     @Param() id: string,
     @Body() book: UpdateBookDto,
   ): Promise<Book> {
-    const formatedId = mongoose.isValidObjectId(id);
-    if (!formatedId) {
-      throw new NotFoundException('Book not found');
-    }
     return this.bookService.updateById(id, book);
   }
 
