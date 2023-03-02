@@ -1,4 +1,11 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmpty,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { User } from 'src/auth/schemas/auth.schema';
 import { Category } from './../schemas/book.shema';
 
 export class UpdateBookDto {
@@ -21,4 +28,7 @@ export class UpdateBookDto {
   @IsOptional()
   @IsEnum(Category)
   readonly category: Category;
+
+  @IsEmpty({ message: 'You cannot pass user id' })
+  readonly user: User;
 }

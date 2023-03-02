@@ -1,23 +1,27 @@
-import { Book } from './schemas/book.shema';
 import {
   Body,
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { request } from 'http';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from './schemas/book.shema';
 
 @Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
 
   @Get()
+  @UseGuards(AuthGuard())
   async getAllBooks(): Promise<Book[]> {
     return this.bookService.findAll();
   }
@@ -29,11 +33,13 @@ export class BookController {
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   async createBook(
     @Body()
     book: CreateBookDto,
+    @Req() req,
   ): Promise<Book> {
-    return this.bookService.create(book);
+    return this.bookService.create(book, req.user);
   }
 
   @Put(':id')
